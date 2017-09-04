@@ -1,4 +1,4 @@
-# Dockerfile
+# from-aptitude.dockerfile
 #
 # Copyright (C) 2006-2017 wolfSSL Inc.
 #
@@ -20,11 +20,14 @@
 
 FROM debian
 
+# activate WOLFSSL_INSTALLS arg after FROM
+ARG WOLFSSL_INSTALL
+
 # install wolfssl from sid
 RUN echo "deb http://ftp.it.debian.org/debian sid main contrib non-free" \
         > /etc/apt/sources.list.d/wolfssl.list \
     && apt-get update \
-    && apt-get install libwolfssl12 libwolfssl-dev \
+    && apt-get install ${WOLFSSL_INSTALL} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm /etc/apt/sources.list.d/wolfssl.list
