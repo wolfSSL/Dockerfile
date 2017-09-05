@@ -24,20 +24,50 @@ ARG WOLFSSL_VERSION
 
 ARG WOLFSSL_MAKE_INSTALL
 
-RUN cd /home \
+RUN set -eux \
+    # installing build deps
+    && buildDeps=' \
+        autoconf \
+        automake \
+        ca-certificates \
+        curl \
+        g++ \
+        libtool \
+        make \
+        unzip \
+    ' \
     && apt-get update \
-    && apt-get install -y wget unzip autoconf libtool make \
-    && wget https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
+    && apt-get install -y --no-install-recommends $buildDeps \
+    && rm -rf /var/lib/apt/lists/* \
+    # downloading source files
+    && curl \
+        -LS https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
+        -o v${WOLFSSL_VERSION}.zip \
     && unzip v${WOLFSSL_VERSION}.zip \
+    && rm v${WOLFSSL_VERSION}.zip \
+    # building and installing wolfssl
     && cd wolfssl-${WOLFSSL_VERSION} \
     && ./autogen.sh \
     && ./configure \
+        --build=x86_64-linux-gnu \
+        --prefix=/usr \
+        --includedir=\${prefix}/include \
+        --mandir=\${prefix}/share/man \
+        --infodir=\${prefix}/share/info \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --libdir=\${prefix}/lib/x86_64-linux-gnu \
+        --libexecdir=\${prefix}/lib/x86_64-linux-gnu \
+        --disable-dependency-tracking \
+        --enable-sha224 \
+        --enable-distro \
+        --disable-examples \
+        --disable-silent-rules \
     && make \
     && make check \
     && make ${WOLFSSL_MAKE_INSTALL} \
+    && ldconfig \
+    # cleaning building deps
     && cd .. \
     && rm -rf wolfssl-${WOLFSSL_VERSION} \
-    && rm v${WOLFSSL_VERSION}.zip \
-    && apt-get autoremove -y wget unzip autoconf libtool make \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get purge -y --auto-remove $buildDeps

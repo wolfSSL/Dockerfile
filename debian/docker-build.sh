@@ -23,7 +23,7 @@
 WOLFSSL_DOCKER_TAG="latest"
 WOLFSSL_VERSION="3.12.0-stable"
 WOLFSSL_MAKE_INSTALL="install-exec"
-WOLFSSL_INSTALL="libwolfssl12"
+WOLFSSL_INSTALL="libwolfssl12/sid"
 
 function usage()
 {
@@ -46,7 +46,7 @@ while [ "$1" != "" ]; do
             ;;
         --with-dev)
             WOLFSSL_MAKE_INSTALL="install"
-            WOLFSSL_INSTALL=$WOLFSSL_INSTALL" libwolfssl-dev"
+            WOLFSSL_INSTALL=$WOLFSSL_INSTALL" libwolfssl-dev/sid"
             ;;
         --from-src)
             WOLFSSL_INSTALL_FROM_SOURCE=1
