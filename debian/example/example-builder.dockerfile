@@ -34,7 +34,7 @@ RUN set -eux \
     ' \
     && apt-get update \
     && apt-get install -y --no-install-recommends $buildDeps \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -r /var/lib/apt/lists/*
 
 ARG WOLFSSL_VERSION
 

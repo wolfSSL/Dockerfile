@@ -1,7 +1,5 @@
 #!/bin/sh
 #
-# Docker image builder (docker-build.sh)
-#
 # Copyright (C) 2006-2017 wolfSSL Inc.
 #
 # This file is part of wolfSSL.
@@ -20,10 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
 
-WOLFSSL_DOCKER_TAG="latest"
-WOLFSSL_VERSION="3.12.0-stable"
+source ../global-config.sh
+
+# default building params
+WOLFSSL_SOURCE="sid"
+WOLFSSL_INSTALL="bin"
+WOLFSSL_PACKAGES="libwolfssl12/sid"
 WOLFSSL_MAKE_INSTALL="install-exec"
-WOLFSSL_INSTALL="libwolfssl12/sid"
 
 function usage()
 {
@@ -45,14 +46,12 @@ while [ "$1" != "" ]; do
             exit
             ;;
         --with-dev)
+            WOLFSSL_INSTALL="dev"
             WOLFSSL_MAKE_INSTALL="install"
-            WOLFSSL_INSTALL=$WOLFSSL_INSTALL" libwolfssl-dev/sid"
+            WOLFSSL_PACKAGES=$WOLFSSL_PACKAGES" libwolfssl-dev/sid"
             ;;
         --from-src)
-            WOLFSSL_INSTALL_FROM_SOURCE=1
-            ;;
-        --tag)
-            WOLFSSL_DOCKER_TAG=$VALUE
+            WOLFSSL_SOURCE="src"
             ;;
         *)
             echo "ERROR: unknown parameter \"$PARAM\""
@@ -63,17 +62,19 @@ while [ "$1" != "" ]; do
     shift
 done
 
-if [ "$WOLFSSL_INSTALL_FROM_SOURCE" != "1" ]; then
+WOLFSSL_DOCKER_TAG=$WOLFSSL_SOURCE-$WOLFSSL_INSTALL
+
+if [ "$WOLFSSL_SOURCE" == "sid" ]; then
     echo "Building docker image using packages from Sid";
-    echo "Installing the following wolfssl packages: "$WOLFSSL_INSTALL;
+    echo "Installing the following wolfssl packages: "$WOLFSSL_PACKAGES;
     echo ;
     docker build \
         -t wolfssl/debian:$WOLFSSL_DOCKER_TAG \
         -f from-aptitude.dockerfile \
-        --build-arg WOLFSSL_INSTALL="$WOLFSSL_INSTALL" \
+        --build-arg WOLFSSL_PACKAGES="$WOLFSSL_PACKAGES" \
         .;
 else
-    echo "Building docker image using wolfSSL source files";
+    echo "Building docker image using wolfSSL-$WOLFSSL_VERSION source files";
     echo "Using the following wolfssl make instruction: "$WOLFSSL_MAKE_INSTALL;
     echo ;
     docker build \

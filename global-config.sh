@@ -1,3 +1,5 @@
+#!/bin/sh
+#
 # Copyright (C) 2006-2017 wolfSSL Inc.
 #
 # This file is part of wolfSSL.
@@ -16,16 +18,4 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
 
-FROM debian
-
-# activate WOLFSSL_INSTALLS arg after FROM
-ARG WOLFSSL_PACKAGES
-
-# install wolfssl from sid
-RUN set -eux \
-    && echo "deb http://ftp.it.debian.org/debian sid main contrib non-free" \
-        > /etc/apt/sources.list.d/wolfssl.list \
-    && apt-get update \
-    && apt-get install -y ${WOLFSSL_PACKAGES} \
-    && rm -r /var/lib/apt/lists/* \
-    && rm /etc/apt/sources.list.d/wolfssl.list
+WOLFSSL_VERSION="3.12.0-stable"

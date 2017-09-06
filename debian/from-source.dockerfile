@@ -1,5 +1,3 @@
-# Dockerfile
-#
 # Copyright (C) 2006-2017 wolfSSL Inc.
 #
 # This file is part of wolfSSL.
@@ -38,13 +36,15 @@ RUN set -eux \
     ' \
     && apt-get update \
     && apt-get install -y --no-install-recommends $buildDeps \
-    && rm -rf /var/lib/apt/lists/* \
+    && rm -r /var/lib/apt/lists/* \
+
     # downloading source files
     && curl \
         -LS https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
         -o v${WOLFSSL_VERSION}.zip \
     && unzip v${WOLFSSL_VERSION}.zip \
     && rm v${WOLFSSL_VERSION}.zip \
+
     # building and installing wolfssl
     && cd wolfssl-${WOLFSSL_VERSION} \
     && ./autogen.sh \
@@ -67,7 +67,8 @@ RUN set -eux \
     && make check \
     && make ${WOLFSSL_MAKE_INSTALL} \
     && ldconfig \
+
     # cleaning building deps
     && cd .. \
-    && rm -rf wolfssl-${WOLFSSL_VERSION} \
+    && rm -r wolfssl-${WOLFSSL_VERSION} \
     && apt-get purge -y --auto-remove $buildDeps
