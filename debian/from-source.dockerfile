@@ -64,7 +64,6 @@ RUN set -eux \
         --disable-examples \
         --disable-silent-rules \
     && make \
-    && make check \
     && make ${WOLFSSL_MAKE_INSTALL} \
     && ldconfig \
 
