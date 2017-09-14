@@ -1,3 +1,5 @@
+# Dockerfile
+#
 # Copyright (C) 2006-2017 wolfSSL Inc.
 #
 # This file is part of wolfSSL.
@@ -16,14 +18,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
 
+ARG WOLFSSL_VERSION=3.12.0-stable
 FROM ubuntu
 
-ARG WOLFSSL_VERSION
-
-ARG WOLFSSL_MAKE_INSTALL
-
+# installing build deps
 RUN set -eux \
-    # installing build deps
     && buildDeps=' \
         autoconf \
         automake \
@@ -36,38 +35,37 @@ RUN set -eux \
     ' \
     && apt-get update \
     && apt-get install -y --no-install-recommends $buildDeps \
-    && rm -r /var/lib/apt/lists/* \
+    && rm -r /var/lib/apt/lists/*
 
-    # downloading source files
+ARG WOLFSSL_VERSION
+
+# downloading source files
+RUN set -eux \
     && curl \
         -LS https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
         -o v${WOLFSSL_VERSION}.zip \
     && unzip v${WOLFSSL_VERSION}.zip \
-    && rm v${WOLFSSL_VERSION}.zip \
+    && rm v${WOLFSSL_VERSION}.zip
 
-    # building and installing wolfssl
+# building and installing wolfssl
+RUN set -eux \
     && cd wolfssl-${WOLFSSL_VERSION} \
     && ./autogen.sh \
     && ./configure \
-        --build=x86_64-linux-gnu \
-        --prefix=/usr \
-        --includedir=\${prefix}/include \
-        --mandir=\${prefix}/share/man \
-        --infodir=\${prefix}/share/info \
-        --sysconfdir=/etc \
-        --localstatedir=/var \
-        --libdir=\${prefix}/lib/x86_64-linux-gnu \
-        --libexecdir=\${prefix}/lib/x86_64-linux-gnu \
         --disable-dependency-tracking \
         --enable-sha224 \
         --enable-distro \
         --disable-silent-rules \
-        --disable-examples \
     && make \
-    && make ${WOLFSSL_MAKE_INSTALL} \
-    && ldconfig \
+    && make check
 
-    # cleaning building deps
-    && cd .. \
-    && rm -r wolfssl-${WOLFSSL_VERSION} \
-    && apt-get purge -y --auto-remove $buildDeps
+# create testing package
+RUN set -eux \
+    && mkdir /wolfssl \
+    && tar -czvf /wolfssl/examples.tar.gz \
+        -C /wolfssl-${WOLFSSL_VERSION} \
+        examples/client/client \
+        examples/server/server \
+        examples/client/.libs \
+        examples/server/.libs \
+        certs
