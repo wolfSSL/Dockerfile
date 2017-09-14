@@ -1,5 +1,3 @@
-# sid-bin-test.dockerfile
-#
 # Copyright (C) 2006-2017 wolfSSL Inc.
 #
 # This file is part of wolfSSL.
@@ -18,17 +16,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
 
-ARG WOLFSSL_DEBIAN_TAG=latest
-FROM wolfssl/debian:$WOLFSSL_DEBIAN_TAG
+ARG WOLFSSL_PACKAGES=libwolfssl12 libwolfssl-dev
+FROM debian
 
-WORKDIR /wolfssl
+# activate WOLFSSL_INSTALLS arg after FROM
+ARG WOLFSSL_PACKAGES
 
-EXPOSE 11111
-
-ADD examples.tar.gz /wolfssl
-
-COPY docker-entrypoint.sh /wolfssl/docker-entrypoint.sh
-
-ENTRYPOINT ["/wolfssl/docker-entrypoint.sh"]
-
-CMD ["bash"]
+# install wolfssl from sid
+RUN set -eux \
+    && echo "deb http://ftp.it.debian.org/debian sid main contrib non-free" \
+        > /etc/apt/sources.list.d/wolfssl.list \
+    && apt-get update \
+    && apt-get install -y ${WOLFSSL_PACKAGES} \
+    && rm -r /var/lib/apt/lists/* \
+    && rm /etc/apt/sources.list.d/wolfssl.list
