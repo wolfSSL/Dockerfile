@@ -34,8 +34,8 @@ ARG WOLFSSL_VERSION
 
 # download source files
 RUN set -eux \
-    && curl -LS \
-        https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
+    && curl \
+        -LS https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
         -o v${WOLFSSL_VERSION}.zip \
     && unzip v${WOLFSSL_VERSION}.zip \
     && rm v${WOLFSSL_VERSION}.zip

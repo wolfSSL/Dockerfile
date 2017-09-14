@@ -22,7 +22,7 @@ FROM debian
 ARG WOLFSSL_VERSION
 
 RUN set -eux \
-    # installing build deps
+    # install deps
     && buildDeps=' \
         autoconf \
         automake \
@@ -37,14 +37,14 @@ RUN set -eux \
     && apt-get install -y --no-install-recommends $buildDeps \
     && rm -r /var/lib/apt/lists/* \
 
-    # downloading source files
+    # download source files
     && curl \
         -LS https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
         -o v${WOLFSSL_VERSION}.zip \
     && unzip v${WOLFSSL_VERSION}.zip \
     && rm v${WOLFSSL_VERSION}.zip \
 
-    # building and installing wolfssl
+    # build and install wolfssl
     && cd wolfssl-${WOLFSSL_VERSION} \
     && ./autogen.sh \
     && ./configure \
@@ -66,7 +66,7 @@ RUN set -eux \
     && make install-exec \
     && ldconfig \
 
-    # cleaning building deps
+    # cleanup
     && cd .. \
     && rm -r wolfssl-${WOLFSSL_VERSION} \
     && apt-get purge -y --auto-remove $buildDeps

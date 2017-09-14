@@ -1,5 +1,3 @@
-# Dockerfile
-#
 # Copyright (C) 2006-2017 wolfSSL Inc.
 #
 # This file is part of wolfSSL.
@@ -21,7 +19,7 @@
 ARG WOLFSSL_VERSION=3.12.0-stable
 FROM ubuntu
 
-# installing build deps
+# install deps
 RUN set -eux \
     && buildDeps=' \
         autoconf \
@@ -39,7 +37,7 @@ RUN set -eux \
 
 ARG WOLFSSL_VERSION
 
-# downloading source files
+# download source files
 RUN set -eux \
     && curl \
         -LS https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
@@ -47,7 +45,7 @@ RUN set -eux \
     && unzip v${WOLFSSL_VERSION}.zip \
     && rm v${WOLFSSL_VERSION}.zip
 
-# building and installing wolfssl
+# build and test wolfssl
 RUN set -eux \
     && cd wolfssl-${WOLFSSL_VERSION} \
     && ./autogen.sh \
@@ -59,7 +57,7 @@ RUN set -eux \
     && make \
     && make check
 
-# create testing package
+# create example package
 RUN set -eux \
     && mkdir /wolfssl \
     && tar -czvf /wolfssl/examples.tar.gz \

@@ -22,20 +22,20 @@ FROM alpine
 ARG WOLFSSL_VERSION
 
 RUN set -eux \
-    # installing deps
+    # install deps
     && apk add --no-cache --virtual .build-deps \
-    autoconf \
-    automake \
-    g++ \
-    libtool \
-    make \
-    openssl \
+        autoconf \
+        automake \
+        g++ \
+        libtool \
+        make \
+        openssl \
 
-    # downloading source files
+    # download source files
     && wget https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
     && unzip v${WOLFSSL_VERSION}.zip \
 
-    # building and installing wolfssl
+    # build and install wolfssl
     && cd wolfssl-${WOLFSSL_VERSION} \
     && ./autogen.sh \
     && ./configure \

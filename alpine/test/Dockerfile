@@ -22,12 +22,12 @@ FROM alpine
 # install dependencies
 RUN set -eux \
     && apk add --no-cache --virtual .deps \
-    autoconf \
-    automake \
-    g++ \
-    libtool \
-    make \
-    openssl
+        autoconf \
+        automake \
+        g++ \
+        libtool \
+        make \
+        openssl
 
 ARG WOLFSSL_VERSION
 

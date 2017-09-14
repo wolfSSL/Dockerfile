@@ -16,6 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
 
+ARG WOLFSSL_PACKAGES=libwolfssl12 libwolfssl-dev
 FROM ubuntu
 
 # activate WOLFSSL_INSTALLS arg after FROM
@@ -29,7 +30,7 @@ RUN set -eux \
     && gpg --keyserver pgpkeys.mit.edu --recv-key 7638D0442B90D010 \
     && gpg -a --export 7638D0442B90D010 | apt-key add - \
 
-    # installs wolfssl from sid
+    # install wolfssl
     && echo "deb http://ftp.it.debian.org/debian sid main contrib non-free" \
         > /etc/apt/sources.list.d/wolfssl.list \
     && apt-get update \

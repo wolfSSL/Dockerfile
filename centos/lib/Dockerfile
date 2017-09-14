@@ -22,7 +22,7 @@ FROM centos
 ARG WOLFSSL_VERSION
 
 RUN set -eux \
-    # installing deps
+    # install deps
     && buildDeps=' \
         autoconf \
         automake \
@@ -32,13 +32,13 @@ RUN set -eux \
     ' \
     && yum install -y $buildDeps \
 
-    # downloading source files
+    # download source files
     && curl -LS \
         https://github.com/wolfSSL/wolfssl/archive/v${WOLFSSL_VERSION}.zip \
         -o v${WOLFSSL_VERSION}.zip \
     && unzip v${WOLFSSL_VERSION}.zip \
 
-    # building and installing wolfssl
+    # build and install wolfssl
     && cd wolfssl-${WOLFSSL_VERSION} \
     && ./autogen.sh \
     && ./configure \
