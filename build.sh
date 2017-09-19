@@ -24,9 +24,9 @@ source VERSION
 
 function usage()
 {
-    echo "wolfSSL Docker examples builder"
+    echo "wolfSSL Docker image builder"
     echo ""
-    echo "./build-examples.sh TARGET_OS"
+    echo "./build.sh TARGET_OS"
     echo "\t-h --help     prints this help message"
     echo "\tTARGET_OS     one of: alpine, centos, debian or ubuntu"
     echo ""
@@ -63,27 +63,27 @@ if [[ "$TARGET_OS" == "" ]]; then
     exit 1
 fi
 
-echo "Building docker examples using wolfssl:$TARGET_OS\n"
+echo "Building docker images using wolfssl:$TARGET_OS\n"
 
 docker build \
-    -t wolfssl:$TARGET_OS-lib \
+    -t wolfssl/wolfssl:$TARGET_OS-lib \
     --build-arg WOLFSSL_VERSION=$WOLFSSL_VERSION \
     $TARGET_OS/lib
 
 docker build \
-    -t wolfssl:$TARGET_OS-test \
+    -t wolfssl/wolfssl:$TARGET_OS-test \
     --build-arg WOLFSSL_VERSION=$WOLFSSL_VERSION \
     $TARGET_OS/test
 
 docker run \
     --rm \
     --entrypoint cat \
-    wolfssl:$TARGET_OS-test \
+    wolfssl/wolfssl:$TARGET_OS-test \
     /wolfssl/examples.tar.gz \
     > examples/examples.tar.gz
 
 docker build \
-    -t wolfssl:$TARGET_OS-examples \
+    -t wolfssl/wolfssl:$TARGET_OS-examples \
     --build-arg BASE_IMAGE=$TARGET_OS-lib \
     examples
 
