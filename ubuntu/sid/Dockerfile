@@ -16,8 +16,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
 
-ARG WOLFSSL_PACKAGES=libwolfssl12 libwolfssl-dev
+ARG WOLFSSL_VERSION=3.12.0-stable
+ARG WOLFSSL_PACKAGES="libwolfssl12 libwolfssl-dev"
 FROM ubuntu
+
+ARG WOLFSSL_VERSION
+
+MAINTAINER wolfSSL Docker Maintainers "support@wolfssl.com"
+
+LABEL vendor="wolfSSL Inc." \
+      version=${WOLFSSL_VERSION}
 
 # activate WOLFSSL_INSTALLS arg after FROM
 ARG WOLFSSL_PACKAGES

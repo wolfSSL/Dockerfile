@@ -19,6 +19,13 @@
 ARG WOLFSSL_VERSION=3.12.0-stable
 FROM alpine
 
+ARG WOLFSSL_VERSION
+
+MAINTAINER wolfSSL Docker Maintainers "support@wolfssl.com"
+
+LABEL vendor="wolfSSL Inc." \
+      version=${WOLFSSL_VERSION}
+
 # install dependencies
 RUN set -eux \
     && apk add --no-cache --virtual .deps \
@@ -28,8 +35,6 @@ RUN set -eux \
         libtool \
         make \
         openssl
-
-ARG WOLFSSL_VERSION
 
 # download source files
 RUN set -eux \

@@ -19,6 +19,13 @@
 ARG WOLFSSL_VERSION=3.12.0-stable
 FROM debian
 
+ARG WOLFSSL_VERSION
+
+MAINTAINER wolfSSL Docker Maintainers "support@wolfssl.com"
+
+LABEL vendor="wolfSSL Inc." \
+      version=${WOLFSSL_VERSION}
+
 # install deps
 RUN set -eux \
     && buildDeps=' \
@@ -34,8 +41,6 @@ RUN set -eux \
     && apt-get update \
     && apt-get install -y --no-install-recommends $buildDeps \
     && rm -r /var/lib/apt/lists/*
-
-ARG WOLFSSL_VERSION
 
 # download source files
 RUN set -eux \

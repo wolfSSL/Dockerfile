@@ -19,6 +19,13 @@
 ARG WOLFSSL_VERSION=3.12.0-stable
 FROM centos
 
+ARG WOLFSSL_VERSION
+
+MAINTAINER wolfSSL Docker Maintainers "support@wolfssl.com"
+
+LABEL vendor="wolfSSL Inc." \
+      version=${WOLFSSL_VERSION}
+
 # install dependencies
 RUN set -eux \
     && buildDeps=' \
@@ -29,8 +36,6 @@ RUN set -eux \
         unzip \
     ' \
     && yum install -y $buildDeps
-
-ARG WOLFSSL_VERSION
 
 # download source files
 RUN set -eux \

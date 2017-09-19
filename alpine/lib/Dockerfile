@@ -21,6 +21,11 @@ FROM alpine
 
 ARG WOLFSSL_VERSION
 
+MAINTAINER wolfSSL Docker Maintainers "support@wolfssl.com"
+
+LABEL vendor="wolfSSL Inc." \
+      version=${WOLFSSL_VERSION}
+
 RUN set -eux \
     # install deps
     && apk add --no-cache --virtual .build-deps \
