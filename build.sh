@@ -63,7 +63,7 @@ if [[ "$TARGET_OS" == "" ]]; then
     exit 1
 fi
 
-echo "Building docker images using wolfssl:$TARGET_OS\n"
+echo "Building docker images from: $TARGET_OS\n"
 
 docker build \
     -t wolfssl/wolfssl:$TARGET_OS-lib \
