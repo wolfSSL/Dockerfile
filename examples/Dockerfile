@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
 
 ARG BASE_IMAGE=latest
-FROM wolfssl:$BASE_IMAGE
+FROM wolfssl/wolfssl:$BASE_IMAGE
 
 WORKDIR /wolfssl
 

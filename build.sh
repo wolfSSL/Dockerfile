@@ -87,5 +87,12 @@ docker build \
     --build-arg BASE_IMAGE=$TARGET_OS-lib \
     examples
 
-rm examples/examples.tar.gz
+if [[ "$TARGET_OS" == "alpine" ]]; then
+    # wolfssl/wolfssl:latest
+    docker build \
+        -t wolfssl/wolfssl \
+        --build-arg BASE_IMAGE=$TARGET_OS-lib \
+        examples
+fi
 
+rm examples/examples.tar.gz
